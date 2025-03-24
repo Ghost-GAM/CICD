@@ -2,7 +2,7 @@ name: SQL Backup Automation
 
 on:
   schedule:
-    - cron: "*/5 * * * *" # Ejecutar cada 2 minutos
+    - cron: "*/5 * * * *" # Ejecuta cada 5 minutos
 
 jobs:
   backup:
@@ -16,4 +16,3 @@ jobs:
       run: |
         chmod +x script.sh
         ./script.sh
-
