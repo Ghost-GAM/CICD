@@ -5,9 +5,9 @@ docker stop sqlserver-container || true
 docker rm sqlserver-container || true
 
 # Ejecutar un nuevo contenedor de SQL Server
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=TuPassword123!" \
-  -p 1433:1433 --name sqlserver-container \
-  -d mcr.microsoft.com/mssql/server:2019-latest
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Dragon#8" \
+  -p 1433:1433 --name SQLCICD \
+  -d mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
 
 # Esperar a que SQL Server esté listo
 sleep 20
