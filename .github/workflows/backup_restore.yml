@@ -3,7 +3,7 @@ name: SQL Backup and Restore
 on:
   push:
   schedule:
-    - cron: '*/2 * * * *'  # Cada 2 minutos
+    - cron: '*/2 * * * *'  # Ejecuta cada 2 minutos
   workflow_dispatch:  # Permite ejecución manual
 
 jobs:
@@ -13,6 +13,11 @@ jobs:
     steps:
       - name: Checkout del código
         uses: actions/checkout@v3
+
+      - name: Instalar Docker (si no está presente)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
 
       - name: Dar permisos al script
         run: chmod +x script.sh
