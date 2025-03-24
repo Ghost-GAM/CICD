@@ -1,0 +1,21 @@
+name: SQL Backup and Restore
+
+on:
+  push:
+  schedule:
+    - cron: '*/2 * * * *'  # Cada 2 minutos
+  workflow_dispatch:  # Permite ejecución manual
+
+jobs:
+  backup_restore:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Dar permisos al script
+        run: chmod +x script.sh
+
+      - name: Ejecutar el Script de Backup y Restauración
+        run: ./script.sh
