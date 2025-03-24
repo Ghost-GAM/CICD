@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 # Nombre del contenedor original
 CONTAINER_ORIG="SQL"
@@ -11,6 +11,15 @@ echo "=== Deteniendo y Eliminando Contenedor Existente (si aplica) ==="
 docker stop $CONTAINER_COPY || true
 docker rm $CONTAINER_COPY || true
 
+echo "=== Verificando que el contenedor original existe ==="
+if ! docker ps -a --format '{{.Names}}' | grep -q "^$CONTAINER_ORIG$"; then
+  echo "Error: El contenedor $CONTAINER_ORIG no existe."
+  exit 1
+fi
+
+echo "=== Creando carpeta de backup en el contenedor original ==="
+docker exec $CONTAINER_ORIG mkdir -p /var/opt/mssql/backup
+
 echo "=== Iniciando Backup del Contenedor Original ==="
 docker exec $CONTAINER_ORIG /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Dragon#8" -Q "BACKUP DATABASE [$DB_NAME] TO DISK = '/var/opt/mssql/backup/backup.bak'"
 
@@ -18,11 +27,10 @@ echo "=== Copiando Backup fuera del contenedor ==="
 docker cp $CONTAINER_ORIG:/var/opt/mssql/backup/backup.bak ./backup.bak
 
 echo "=== Creando Nuevo Contenedor ==="
-docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Dragon#8' -p 1435:1433 --name $CONTAINER_COPY -d mcr.microsoft.com/mssql/server:2019-latest
+docker run --privileged -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Dragon#8' -p 1435:1433 --name $CONTAINER_COPY -d mcr.microsoft.com/mssql/server:2019-latest
 
-# Esperar a que SQL Server en el nuevo contenedor esté listo
 echo "Esperando que SQL Server en el nuevo contenedor se inicie..."
-until docker exec $CONTAINER_COPY /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Dragon#8' -Q "SELECT 1" &> /dev/null
+until docker exec $CONTAINER_COPY /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Dragon#8' -Q "SELECT @@VERSION" &> /dev/null
 do
   echo "Esperando a que SQL Server esté listo..."
   sleep 5
@@ -30,7 +38,6 @@ done
 
 echo "=== SQL Server Listo en el Nuevo Contenedor ==="
 
-# Crear la carpeta de backup en el nuevo contenedor (si no existe)
 echo "=== Creando carpeta de backup en el nuevo contenedor ==="
 docker exec $CONTAINER_COPY mkdir -p /var/opt/mssql/backup
 
