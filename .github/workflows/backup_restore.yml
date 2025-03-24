@@ -1,0 +1,22 @@
+name: SQL Backup and Restore
+
+on:
+  schedule:
+    - cron: '*/2 * * * *'  # Ejecuta la tarea cada 2 minutos
+  workflow_dispatch:  # Permite ejecutar la accion manualmente desde GitHub
+
+jobs:
+  backup_restore:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v3
+
+      - name: Configurar Docker
+        run: |
+          sudo apt update
+          sudo apt install -y docker.io
+
+      - name: Ejecutar el Script de Backup y Restauracion
+        run: ./script.sh
