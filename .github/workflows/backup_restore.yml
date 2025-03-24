@@ -1,26 +1,19 @@
-name: SQL Backup and Restore
+name: SQL Backup Automation
 
 on:
-  push:
   schedule:
-    - cron: '*/2 * * * *'  # Ejecuta cada 2 minutos
-  workflow_dispatch:  # Permite ejecución manual
+    - cron: "*/5 * * * *" # Ejecutar cada 2 minutos
 
 jobs:
-  backup_restore:
+  backup:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v3
+    - name: Clonar el repositorio
+      uses: actions/checkout@v3
 
-      - name: Instalar Docker (si no está presente)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
+    - name: Ejecutar el script de backup
+      run: |
+        chmod +x script.sh
+        ./script.sh
 
-      - name: Dar permisos al script
-        run: chmod +x script.sh
-
-      - name: Ejecutar el Script de Backup y Restauración
-        run: ./script.sh
