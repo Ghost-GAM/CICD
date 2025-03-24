@@ -14,6 +14,15 @@ sleep 20
 
 echo "Contenedor de SQL Server iniciado."
 
+# Crear una base de datos de prueba
+docker exec -i sqlserver-container /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Dragon#8' -Q "CREATE DATABASE TestDB"
+
+# Crear un backup de la base de datos
+docker exec -i sqlserver-container /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Dragon#8' -Q "BACKUP DATABASE TestDB TO DISK = '/var/opt/mssql/backup/TestDB.bak'"
+
+echo "Backup de la base de datos realizado."
+
+
 # Nombre del contenedor original
 CONTAINER_ORIG="SQL"
 # Nombre del contenedor de respaldo
