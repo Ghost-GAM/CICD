@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Detener y eliminar el contenedor si ya existe
-docker stop sqlserver-container || true
-docker rm sqlserver-container || true
+docker stop SQLCICD || true
+docker rm SQLCICD || true
 
 # Ejecutar un nuevo contenedor de SQL Server
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Dragon#8" \
