@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Detener y eliminar el contenedor si ya existe
+docker stop sqlserver-container || true
+docker rm sqlserver-container || true
+
+# Ejecutar un nuevo contenedor de SQL Server
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=TuPassword123!" \
+  -p 1433:1433 --name sqlserver-container \
+  -d mcr.microsoft.com/mssql/server:2019-latest
+
+# Esperar a que SQL Server esté listo
+sleep 20
+
+echo "Contenedor de SQL Server iniciado."
 
 # Nombre del contenedor original
 CONTAINER_ORIG="SQL"
