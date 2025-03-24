@@ -1,21 +1,23 @@
-name: SQL Backup and Restore
+name: Backup and Restore Workflow
 
 on:
   push:
-  schedule:
-    - cron: '*/5 * * * *'  # Cada 2 minutos
-  workflow_dispatch:  # Permite ejecución manual
+    branches:
+      - main
 
 jobs:
   backup_restore:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del código
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Dar permisos al script
-        run: chmod +x script.sh
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
 
-      - name: Ejecutar el Script de Backup y Restauración
-        run: ./script.sh
+      - name: Run Backup and Restore Containers
+        run: |
+          docker-compose up -d
+          sleep 10
+          docker-compose logs
